@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  # O Servidor de Autorização e Recursos (PS)
+  auth-server:
+    build:
+      context: ./auth_server
+    ports:
+      # Expõe a porta 8000 do contêiner para a porta 8000 da sua máquina host
+      - "8000:8000"
+    container_name: auth-server-ps
+    environment:
+      AUTHLIB_INSECURE_TRANSPORT: 1
+
+  # A Aplicação Cliente (PI)
+  client-app:
+    build:
+      context: ./client_app
+    container_name: client-app-pi
+    depends_on:
+      # Garante que o client-app só inicie depois que o auth-server estiver pronto
+      - auth-server
+    environment:
+      OAUTHLIB_INSECURE_TRANSPORT: 1
