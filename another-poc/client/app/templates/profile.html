@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Perfil do Usuário</title>
+</head>
+<body>
+    <h1>Perfil do Usuário (Protegido)</h1>
+    <p>Esta página só pode ser vista por usuários autenticados.</p>
+    <pre>{{ user | tojson }}</pre>
+    <a href="/">Voltar</a>
+
+    <script>
+        var userInfo = {{ user | tojson }};
+        console.log(userInfo);
+    </script>
+</body>
+</html>

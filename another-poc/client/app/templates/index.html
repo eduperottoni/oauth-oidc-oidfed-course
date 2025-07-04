@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PoC OIDC com Keycloak</title>
+</head>
+<body>
+    <h1>Cliente OIDC Python</h1>
+    {% if user %}
+        <p>Olá, {{ user.given_name }}! Você está autenticado.</p>
+        <p><a href="/profile">Ver Perfil</a></p>
+        <p><a href="/logout">Logout</a></p>
+    {% else %}
+        <p>Você não está autenticado.</p>
+        <p><a href="/login">Fazer Login com Keycloak</a></p>
+    {% endif %}
+</body>
+</html>

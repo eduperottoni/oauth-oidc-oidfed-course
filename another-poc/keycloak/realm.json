@@ -1,0 +1,39 @@
+{
+  "realm": "poc-realm",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "poc-python-client",
+      "secret": "mySuperSecretClientSecret",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "clientAuthenticatorType": "client-secret",
+      "redirectUris": [
+        "http://localhost:5000/*"
+      ],
+      "baseUrl": "http://localhost:5000",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "implicitFlowEnabled": false,
+      "rootUrl": "http://localhost:5000"
+    }
+  ],
+  "users": [
+    {
+      "username": "aluno",
+      "enabled": true,
+      "email": "edu.perottoni@gmail.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "123456",
+          "temporary": false
+        }
+      ],
+      "firstName": "Aluno",
+      "lastName": "da Silva"
+    }
+  ]
+}

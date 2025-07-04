@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak-server
+    command: start-dev
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
+    ports:
+      - 8080:8080
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000; echo -e 'GET /health/ready HTTP/1.1\r\nHost: localhost:9000\r\nConnection: close\r\n\r\n' >&3;cat <&3 | grep -q '\"status\": \"UP\"' && exit 0 || exit 1"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
+  keycloak-config:
+    image: adorsys/keycloak-config-cli:latest
+    container_name: keycloak-config
+    environment:
+      # - --keycloak-url=http://keycloak:8080
+      # - --keycloak-user=admin
+      # - --keycloak-password=admin
+      # - --import-path=/config/realm.json
+      KEYCLOAK_URL: http://keycloak:8080
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      # Aponta para o diretório onde o realm.json está
+      IMPORT_PATH: /config
+    volumes:
+      - ./keycloak:/config
+    depends_on:
+      keycloak:
+        condition: service_healthy
+
+  python-client:
+    build: ./client
+    container_name: python-oidc-client
+    ports:
+      - 5000:5000
+    environment:
+      OIDC_CLIENT_ID: poc-python-client
+      OIDC_CLIENT_SECRET: mySuperSecretClientSecret
+      OIDC_DISCOVERY_URL: http://keycloak:8080/realms/poc-realm/.well-known/openid-configuration
+    depends_on:
+      - keycloak-config
